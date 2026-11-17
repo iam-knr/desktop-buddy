@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <clipPath id="headclip"><ellipse cx="0" cy="0" rx="20" ry="18"/></clipPath>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c1c20"/>
+      <stop offset="1" stop-color="#0a0a0b"/>
+    </linearGradient>
+  </defs>
+  <!-- dark glass tile with a thin red summit line, matching the desktop -->
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#bg)"/>
+  <rect x="4.5" y="4.5" width="119" height="119" rx="27.5" fill="none" stroke="#ffffff" stroke-opacity="0.12"/>
+  <path d="M30 108 L64 100 L98 108" fill="none" stroke="#E11D2E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+  <!-- Shika's head, same shapes and colours as the pup on your desktop -->
+  <g transform="translate(64 58) scale(1.85)">
+    <ellipse cx="0" cy="0" rx="20" ry="18" fill="#E88A3C"/>
+    <g clip-path="url(#headclip)">
+      <ellipse cx="0" cy="7" rx="14" ry="10" fill="#FFEDD2"/>
+      <ellipse cx="0" cy="-10" rx="3" ry="6" fill="#FFEDD2"/>
+    </g>
+    <ellipse cx="0" cy="0" rx="20" ry="18" fill="none" stroke="#3C2112" stroke-width="3"/>
+    <g fill="#7A401E" stroke="#3C2112" stroke-width="2.4">
+      <g transform="translate(-16 -11) rotate(22)"><ellipse cx="0" cy="7.5" rx="5" ry="9.5"/></g>
+      <g transform="translate(16 -11) rotate(-22)"><ellipse cx="0" cy="7.5" rx="5" ry="9.5"/></g>
+    </g>
+    <g fill="#26140A">
+      <ellipse cx="-7.5" cy="-1" rx="4.2" ry="4.5"/>
+      <ellipse cx="7.5" cy="-1" rx="4.2" ry="4.5"/>
+    </g>
+    <g fill="#FAFAFA">
+      <circle cx="-6.1" cy="-2.6" r="1.6"/><circle cx="-8.8" cy="0.5" r="0.8"/>
+      <circle cx="8.9" cy="-2.6" r="1.6"/><circle cx="6.2" cy="0.5" r="0.8"/>
+    </g>
+    <g fill="#FF6969" fill-opacity="0.6">
+      <ellipse cx="-12.5" cy="5.5" rx="3.4" ry="2.1"/>
+      <ellipse cx="12.5" cy="5.5" rx="3.4" ry="2.1"/>
+    </g>
+    <rect x="-2.6" y="8" width="5.4" height="7" rx="2.7" fill="#E11D2E" stroke="#3C2112" stroke-width="1.5"/>
+    <ellipse cx="0" cy="4" rx="3.4" ry="2.4" fill="#26140A"/>
+    <path d="M-4.6 7 Q-2.3 9.8 0 7 Q2.3 9.8 4.6 7" fill="none" stroke="#3C2112" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
