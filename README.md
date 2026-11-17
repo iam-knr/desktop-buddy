@@ -241,4 +241,4 @@ shika ai, desktop buddy, desktop companion, voice assistant for Linux, offline d
 
 MIT. See [LICENSE](LICENSE).
 
-Built by [Kailas Nath R (KNR)](https://github.com/iam-knr).
+Built by [Kailas (KNR) Nath R](https://github.com/iam-knr).
