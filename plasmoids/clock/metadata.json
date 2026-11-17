@@ -1,0 +1,14 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [{ "Name": "Adsmentor" }],
+        "Category": "Date and Time",
+        "Description": "Big condensed clock with the date in spaced capitals and your next reminder",
+        "Icon": "preferences-system-time",
+        "Id": "in.adsmentor.summit.clock",
+        "License": "GPL-3.0+",
+        "Name": "Summit Clock",
+        "Version": "1.1"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

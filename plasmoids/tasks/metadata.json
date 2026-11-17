@@ -1,0 +1,18 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Adsmentor"
+            }
+        ],
+        "Category": "Utilities",
+        "Description": "Tasks and reminders in one glass list; Shika barks when they're due",
+        "Icon": "view-task",
+        "Id": "in.adsmentor.summit.tasks",
+        "License": "GPL-3.0+",
+        "Name": "Summit Tasks & Reminders",
+        "Version": "2.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

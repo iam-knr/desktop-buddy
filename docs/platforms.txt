@@ -1,0 +1,62 @@
+SHIKA AI FOR LINUX, MAC AND WINDOWS
+================================
+
+One shika.py now runs on all three. Linux behaves exactly like 3.18. Mac and Windows use different
+helpers under the hood but the pup, the dashboard, the 15 characters, names, reminders and notes are the same.
+
+INSTALL
+-------
+Linux:    bash install.sh
+Mac:      bash install-mac.sh          (add --with-ollama for the optional local AI)
+Windows:  double-click install-windows.bat   (or right-click install-windows.ps1 > Run with PowerShell)
+
+Uninstall: uninstall.sh, uninstall-mac.sh, uninstall-windows.bat. Your notes and settings are kept
+unless you add --purge-data (Mac) or -PurgeData (Windows).
+
+KEYS
+----
+Hold Right Ctrl to dictate. Hold Right Alt (Right Option on a Mac) to give a command.
+Press any other key while holding to cancel.
+On a Mac, shortcuts the pup sends are translated (Ctrl becomes Cmd, Alt+Left becomes Cmd+[ and so on).
+
+MAC PERMISSIONS (one time)
+--------------------------
+System Settings > Privacy & Security:
+  Microphone         allow Shika
+  Input Monitoring   add Shika.app from ~/Applications  (needed to see the held keys)
+  Accessibility      add Shika.app                       (needed to paste and press shortcuts)
+Then turn Shika off from the pup menu and open it again.
+
+WINDOWS NOTES
+-------------
+Windows may ask for microphone access. Say yes. If a key press is not seen inside an app that runs as
+administrator, run Shika as administrator too (Windows blocks key watching across that border).
+
+RESTART THE PUP
+---------------
+Linux:    pkill -f "shika/shika.py"; nohup env QT_QPA_PLATFORM=xcb ~/.local/share/shika/venv/bin/python3 ~/.local/share/shika/shika.py --autostart >/dev/null 2>&1 &
+Mac:      pkill -f ShikaApp/shika.py; open ~/Applications/Shika.app
+Windows:  Stop-Process -Name pythonw -Force; Start-Process "$env:LOCALAPPDATA\ShikaApp\venv\Scripts\pythonw.exe" "$env:LOCALAPPDATA\ShikaApp\shika.py"
+
+WHERE DATA LIVES
+----------------
+Linux:    unchanged from 3.18
+Mac:      ~/Library/Application Support/Shika and .../Summit
+Windows:  %APPDATA%\Shika and %LOCALAPPDATA%\Summit
+Error log: error.log inside the Shika folder.
+
+WHAT DIFFERS OFF LINUX
+----------------------
+Works the same: pup, dashboard, characters and names, reminders, notes, dictation, voice commands
+(open apps, close, lock, volume, media keys, tabs), taskbar or Dock awareness (Qt reports the free area).
+Linux only: Plasma panel reading, Summit widgets, browser profile handling, KDE window scripting.
+No volume ducking on Windows. No system notifications on Windows (the pup's bubble is used).
+On Mac the idle check uses mouse movement. App windows are closed politely through AppleScript
+or PowerShell.
+
+HONEST TESTING NOTE
+-------------------
+Linux has the full suite (run tests/run.sh). Mac and Windows were tested with fake keyboard, microphone
+and Qt modules on Linux: 36 checks each in tests/t_cross.py (python3 t_cross.py mac, python3 t_cross.py win).
+The real window, permissions prompts and the PowerShell and AppleScript calls have not run on real machines.
+If something breaks, send error.log and the system version.

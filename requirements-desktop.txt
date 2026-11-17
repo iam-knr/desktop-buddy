@@ -1,0 +1,6 @@
+# Needed by the macOS and Windows installers (Linux uses install.sh and system packages instead)
+PyQt6
+faster-whisper
+sounddevice
+pynput
+numpy

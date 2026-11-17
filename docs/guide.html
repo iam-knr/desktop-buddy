@@ -1,0 +1,352 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>html{color-scheme:dark}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style><script>document.documentElement.className+=" js"</script>
+<title>Shika AI Setup Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Step by step setup for Shika AI on Linux, macOS and Windows: install, permissions, keys, widgets, and how to change the speech and language models.">
+<meta name="keywords" content="Shika AI, Desktop Buddy, desktop companion, desktop pet, offline voice assistant, voice typing, push to talk dictation, faster-whisper, Ollama, local AI, Linux, macOS, Windows">
+<link rel="canonical" href="https://iam-knr.github.io/desktop-buddy/guide.html">
+<meta property="og:type" content="website"><meta property="og:title" content="Shika AI Setup Guide"><meta property="og:description" content="Step by step setup for Shika AI on Linux, macOS and Windows: install, permissions, keys, widgets, and how to change the speech and language models."><meta property="og:url" content="https://iam-knr.github.io/desktop-buddy/guide.html"><meta property="og:image" content="https://iam-knr.github.io/desktop-buddy/assets/banner.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Shika AI Setup Guide"><meta name="twitter:description" content="Step by step setup for Shika AI on Linux, macOS and Windows: install, permissions, keys, widgets, and how to change the speech and language models."><meta name="twitter:image" content="https://iam-knr.github.io/desktop-buddy/assets/banner.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+/* A calm dark desk. Neutral ink background, one red and one yellow taken from the pet's own belt, thin lines, no glow. */
+:root {
+  --night: #0e0f14; --night-2: #13141b; --panel: rgba(255,255,255,.035); --panel-solid: #15161d;
+  --line: rgba(255,255,255,.09); --line-2: rgba(255,255,255,.16); --fg: #ecebf1; --muted: #a2a1b3; --faint: #72717f;
+  --belt: #d6202f; --belt-hi: #e8323f; --letters: #ffd83d; --fur: #e88a3c; --outline: #3c2112;
+  --ok: #67d6a0; --soft: #c9c8d6;
+  --display: "Bricolage Grotesque", "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ease: cubic-bezier(.2,.7,.2,1);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+body { margin: 0; background: var(--night); color: var(--fg); font: 16px/1.65 var(--body); -webkit-font-smoothing: antialiased; overflow-x: clip;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+a { color: inherit; text-underline-offset: 3px; }
+img, svg { max-width: 100%; }
+::selection { background: var(--belt); color: #fff; }
+
+/* background: soft light from the top, a faint dot grid that drifts slower than the page, flat ground at the bottom */
+.sky { position: fixed; inset: 0; z-index: -3; background:
+  radial-gradient(900px 520px at 50% -8%, rgba(255,255,255,.055), transparent 70%),
+  linear-gradient(180deg, #0e0f14 0%, #101117 60%, #14121a 100%); }
+.moon { position: fixed; inset: -20% 0 0 0; z-index: -2; width: auto; height: auto; border-radius: 0; box-shadow: none; filter: none; opacity: .9;
+  background-image: radial-gradient(rgba(255,255,255,.11) 1px, transparent 1.4px); background-size: 30px 30px;
+  -webkit-mask-image: radial-gradient(ellipse 75% 60% at 50% 35%, #000 20%, transparent 78%); mask-image: radial-gradient(ellipse 75% 60% at 50% 35%, #000 20%, transparent 78%);
+  transform: translate3d(0, calc(var(--sy, 0) * -.06px), 0); }
+.hills { position: fixed; left: 0; right: 0; bottom: 0; width: 100%; max-width: none; height: 150px; z-index: -1; pointer-events: none; }
+.hills path:nth-child(1) { fill: #13141b; } .hills path:nth-child(2) { fill: #171821; } .hills path:nth-child(3) { fill: #1b1c27; }
+
+#prog { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 60; background: var(--belt); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); pointer-events: none; }
+.wrap { max-width: 1120px; margin: 0 auto; }
+nav.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; display: flex; align-items: center; gap: 20px; padding: 14px 0;
+  background: transparent; border-bottom: 1px solid transparent; transition: background .3s var(--ease), border-color .3s var(--ease), padding .3s var(--ease);
+  margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+nav.top.scrolled { background: rgba(14,15,20,.82); backdrop-filter: blur(12px); border-color: var(--line); padding-block: 10px; }
+nav.top .inner { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; gap: 20px; width: 100%; }
+.logo { font: 800 19px/1 var(--display); text-decoration: none; letter-spacing: -.01em; display: inline-flex; align-items: center; gap: 10px; }
+.logo i { width: 11px; height: 24px; background: var(--belt); border: 2px solid var(--outline); border-radius: 4px; display: inline-block; transition: transform .4s var(--ease); }
+.logo:hover i { transform: rotate(-12deg) translateY(-1px); }
+nav.top .links { margin-left: auto; display: flex; gap: 2px; flex-wrap: wrap; align-items: center; }
+nav.top .links a { text-decoration: none; padding: 7px 11px; border-radius: 999px; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s, background .2s; }
+nav.top .links a:hover { color: var(--fg); background: rgba(255,255,255,.06); }
+nav.top .links a.on { color: var(--fg); }
+nav.top .links a.gh { color: var(--fg); border: 1px solid var(--line); margin-left: 6px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; font: 600 15px/1 var(--body); padding: 14px 20px; border-radius: 12px; border: 1px solid var(--line);
+  background: rgba(255,255,255,.045); color: var(--fg); text-decoration: none; cursor: pointer; transition: transform .2s var(--ease), border-color .2s, background .2s; }
+.btn:hover { border-color: var(--line-2); background: rgba(255,255,255,.08); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn.primary { background: var(--belt); border-color: rgba(0,0,0,.35); box-shadow: 0 1px 0 rgba(255,255,255,.18) inset, 0 2px 0 #7d0f19; color: #fff; }
+.btn.primary:hover { background: var(--belt-hi); }
+.btn:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--letters); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; text-wrap: balance; margin: 0; }
+h2 { font-size: clamp(30px, 4.2vw, 46px); line-height: 1.06; font-weight: 800; }
+h3 { font-size: 21px; font-weight: 700; line-height: 1.2; }
+p { margin: 0; text-wrap: pretty; }
+.eyebrow { font: 600 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--letters); display: inline-flex; align-items: center; gap: 12px; }
+.eyebrow::before { content: ""; width: 26px; height: 1px; background: currentColor; opacity: .7; transform-origin: 0 50%; }
+.belt { display: inline-block; background: var(--belt); color: var(--letters); padding: .02em .22em .06em; border: .06em solid var(--outline); border-radius: .22em;
+  transform: rotate(-2.5deg); box-shadow: 0 .05em 0 #7d0f19; }
+code, kbd, pre { font-family: var(--mono); }
+code { font-size: .92em; color: #e6e5f0; }
+kbd { background: rgba(255,255,255,.07); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 7px; padding: 2px 7px; font-size: .86em; }
+.pill { display: inline-block; font: 600 12px/1 var(--body); padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.pill.ok { color: var(--ok); border-color: rgba(103,214,160,.35); }
+.pill.early { color: var(--letters); border-color: rgba(255,216,61,.35); }
+section { padding-block: 84px; }
+.panel { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; transition: border-color .25s, background .25s, transform .35s var(--ease); }
+.panel::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255,255,255,.07), transparent 70%); }
+.panel:hover { border-color: var(--line-2); }
+.panel:hover::before { opacity: 1; }
+.codebox { position: relative; background: #0b0c10; border: 1px solid var(--line); border-radius: 12px; padding: 14px 58px 14px 16px; overflow-x: auto; margin: 12px 0; }
+.codebox pre { margin: 0; font-size: 13.5px; line-height: 1.7; color: #dcdbea; white-space: pre; }
+.codebox .copy { position: absolute; top: 8px; right: 8px; padding: 6px 9px; font: 600 11px/1 var(--body); border-radius: 8px; border: 1px solid var(--line); background: rgba(255,255,255,.05); color: var(--muted); cursor: pointer; }
+.codebox .copy:hover { color: var(--fg); }
+footer { padding-block: 44px 170px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+
+/* scroll reveal (only when JS is running) */
+html.js [data-r] { opacity: 0; translate: 0 26px; transition: opacity .8s var(--ease) var(--d, 0ms), translate .8s var(--ease) var(--d, 0ms); }
+html.js [data-r].in { opacity: 1; translate: 0 0; }
+html.js .eyebrow[data-r]::before, html.js .head.in .eyebrow::before { }
+html.js .head .eyebrow::before { transform: scaleX(0); transition: transform .8s var(--ease) .25s; }
+html.js .head.in .eyebrow::before { transform: scaleX(1); }
+@keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes stamp { 0% { opacity: 0; transform: rotate(-9deg) scale(1.35); } 60% { opacity: 1; transform: rotate(-1deg) scale(.97); } 100% { transform: rotate(-2.5deg) scale(1); } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } html.js [data-r] { opacity: 1; translate: 0 0; } }
+.scroll { overflow-x: auto; overflow-y: hidden; }
+
+.g { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 40px; padding-block: 48px 80px; align-items: start; }
+.toc { position: sticky; top: 84px; display: grid; gap: 6px; font-size: 14px; }
+.toc a { text-decoration: none; color: var(--muted); padding: 6px 10px; border-radius: 8px; }
+.toc a:hover { color: var(--fg); background: rgba(255,255,255,.06); }
+.doc { display: grid; gap: 22px; min-width: 0; }
+.doc h1 { font-size: clamp(36px, 5vw, 60px); line-height: 1; font-weight: 800; }
+.doc h2 { font-size: 28px; margin-top: 26px; }
+.doc h3 { font-size: 19px; margin-top: 8px; }
+.doc p, .doc li { color: #c9c8d6; max-width: 46em; }
+.doc ol, .doc ul { padding-left: 22px; display: grid; gap: 8px; margin: 0; }
+.os-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { font: 600 14px/1 var(--body); padding: 12px 16px; border-radius: 11px; border: 1px solid var(--line); background: rgba(255,255,255,.05); color: var(--fg); cursor: pointer; }
+.chip[aria-selected=true] { background: var(--belt); border-color: #0006; }
+.os-panel[hidden] { display: none; }
+.os-panel { display: grid; gap: 18px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 700 12px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.scroll { overflow-x: auto; }
+.callout { padding: 16px 18px; border-left: 3px solid var(--letters); background: rgba(255,216,61,.06); border-radius: 0 12px 12px 0; }
+.callout p { color: #e9e6c8; }
+@media (max-width: 860px) { .g { grid-template-columns: minmax(0, 1fr); } .toc { position: static; grid-auto-flow: column; overflow-x: auto; } .toc a { white-space: nowrap; } }
+
+.doc > * { }
+.toc a { transition: color .2s, background .2s, transform .25s var(--ease); } .toc a:hover { transform: translateX(3px); } .toc a.on { color: var(--fg); background: rgba(255,255,255,.07); }
+.doc h1, .doc > div:first-child { animation: rise .8s var(--ease) both; }
+details { transition: background .25s; } details[open] p, details[open] .os-panel { animation: rise .4s var(--ease) both; }
+summary::after { transition: transform .3s var(--ease); } details[open] summary::after { transform: rotate(180deg); }
+tbody tr { transition: background .2s; } tbody tr:hover { background: rgba(255,255,255,.03); }
+.chip { transition: border-color .2s, background .2s, transform .2s var(--ease); } .chip:active { transform: scale(.96); }
+</style>
+
+<div id="prog"></div></head><body><div class="sky"></div><div class="moon" aria-hidden="true"></div>
+<svg class="hills" viewBox="0 0 1440 190" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0 110 C 180 40 320 60 520 100 S 900 150 1100 90 S 1360 40 1440 80 V190 H0Z" fill="#1d2150"/>
+  <path d="M0 140 C 220 90 380 110 620 140 S 1000 175 1220 130 S 1400 110 1440 124 V190 H0Z" fill="#262c63"/>
+  <path d="M0 168 C 300 148 560 172 820 160 S 1240 150 1440 166 V190 H0Z" fill="#2f3877"/>
+</svg>
+<nav class="top"><div class="inner">
+  <a class="logo" href="index.html"><i></i>Shika AI</a>
+  <div class="links"><a href="index.html">Home</a><a href="index.html#install">Install</a><a class="gh" href="https://github.com/iam-knr/desktop-buddy" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap g">
+  <aside class="toc" aria-label="On this page">
+    <a href="#before">Before you start</a><a href="#install">Install</a><a href="#first">First run</a><a href="#keys">Keys and voice</a><a href="#ai-models">Shika AI and models</a><a href="#widgets">Widgets</a><a href="#restart">Restart and update</a><a href="#fix">Fixes</a><a href="#data">Your data</a><a href="#remove">Uninstall</a>
+  </aside>
+  <article class="doc">
+    <div><span class="eyebrow">Setup guide</span><h1>Set up Shika AI.</h1></div>
+    <p>Pick your system. The page shows the steps for the one you choose, and it starts on the one it thinks you use.</p>
+    <div class="os-tabs" role="tablist" aria-label="Operating system">
+      <button class="chip" role="tab" id="g-linux" aria-selected="true">Linux</button>
+      <button class="chip" role="tab" id="g-mac" aria-selected="false">macOS</button>
+      <button class="chip" role="tab" id="g-windows" aria-selected="false">Windows</button>
+    </div>
+
+    <h2 id="before">Before you start</h2>
+    <div class="callout"><p>Honest status: Linux is the system this was built and used on every day. The Mac and Windows versions pass automated tests that simulate the keyboard, microphone and windows, but they have not been run on real Macs or PCs by the author yet. If something breaks, please open an issue on GitHub with your system version and the text from the terminal.</p></div>
+    <div class="os-panel" id="b-linux"><ul><li>Kubuntu or any Ubuntu based system. KDE Plasma 6 is best, since it also gives you the native Plasma widgets.</li><li>About 1 GB of free disk space, or about 2 GB if you also install the language model. The speech model alone is about 500 MB.</li><li>A microphone.</li><li>Internet for the install and the first model download. After that it works offline.</li></ul></div>
+    <div class="os-panel" id="b-mac" hidden><ul><li>macOS 12 or newer, Intel or Apple silicon.</li><li>Python 3.10 or newer. Homebrew users can run <code>brew install python</code>.</li><li>About 1 GB of free disk space.</li><li>A microphone. You will be asked for three permissions below.</li></ul></div>
+    <div class="os-panel" id="b-windows" hidden><ul><li>Windows 10 or 11.</li><li>Python 3.10 or newer from python.org. Tick "Add python.exe to PATH" in the installer.</li><li>About 1 GB of free disk space.</li><li>A microphone.</li></ul></div>
+
+    <h2 id="install">Install</h2>
+    <div class="os-panel" id="i-linux">
+      <ol>
+        <li>Open a terminal and run these three lines.</li>
+      </ol>
+      <div class="codebox"><button class="copy">Copy</button><pre>git clone https://github.com/iam-knr/desktop-buddy.git
+cd desktop-buddy
+bash install.sh</pre></div>
+      <ol start="2"><li>The script asks for your password once to install packages with apt, add a rule so push-to-talk can read your keyboard, and add you to the input group.</li><li>Log out and log back in one time. This is needed for the input group.</li><li>The buddy starts at login from now on. To start it right away, open it from the application menu.</li></ol>
+      <p>On KDE Plasma the installer also adds the Tasks, Sticky Note, Focus and Clock widgets through kpackagetool6. Right click the desktop, choose Add Widgets, and search for them.</p>
+    </div>
+    <div class="os-panel" id="i-mac" hidden>
+      <ol><li>Open Terminal and run these three lines.</li></ol>
+      <div class="codebox"><button class="copy">Copy</button><pre>git clone https://github.com/iam-knr/desktop-buddy.git
+cd desktop-buddy
+bash install-mac.sh</pre></div>
+      <ol start="2"><li>The script makes a private Python environment, installs the packages, downloads the speech model, and creates Shika in your Applications folder (inside your home folder).</li><li>It also adds a login item so the buddy starts when you sign in.</li><li>Open the app once from Launchpad or Spotlight.</li></ol>
+      <h3>Give it the three permissions</h3>
+      <p>Open System Settings, then Privacy and Security. Add the app under each of these and switch it on.</p>
+      <div class="scroll"><table><thead><tr><th>Permission</th><th>Why it needs it</th></tr></thead><tbody>
+        <tr><td>Microphone</td><td>To hear you while you hold the key.</td></tr>
+        <tr><td>Input Monitoring</td><td>To notice when you press and release the talk key.</td></tr>
+        <tr><td>Accessibility</td><td>To type the text into other apps and to press shortcuts for you.</td></tr>
+      </tbody></table></div>
+      <p>Quit and open the app again after you change a permission. macOS only applies it on the next start.</p>
+    </div>
+    <div class="os-panel" id="i-windows" hidden>
+      <ol><li>Open PowerShell or Command Prompt and run these lines. If you do not have git, download the ZIP from the GitHub page, unzip it, and double-click install-windows.bat.</li></ol>
+      <div class="codebox"><button class="copy">Copy</button><pre>git clone https://github.com/iam-knr/desktop-buddy.git
+cd desktop-buddy
+.\install-windows.bat</pre></div>
+      <ol start="2"><li>The installer creates a private Python environment, installs the packages, downloads the speech model, and adds a Start Menu shortcut and a Startup shortcut.</li><li>If Windows SmartScreen warns about the script, choose More info, then Run anyway. The code is in the repository for you to read first.</li><li>Allow microphone access when Windows asks. You can check it later in Settings, Privacy, Microphone.</li></ol>
+    </div>
+
+    <h2 id="first">First run</h2>
+    <ol>
+      <li>A small pet companion walks onto your desktop. That is the buddy. Its name is printed on a red belt.</li>
+      <li>The first start downloads the speech model. It takes a few minutes and the buddy says when it is ready.</li>
+      <li>Click the buddy to pet it. Right click for the menu, where you can pick a character, rename it and open the reminders.</li>
+      <li>Say "call yourself Momo" with the command key held, or rename it from the menu.</li>
+    </ol>
+
+    <h2 id="keys">Keys and voice</h2>
+    <div class="scroll"><table><thead><tr><th>You do</th><th>What happens</th></tr></thead><tbody>
+      <tr><td>Hold <kbd>Right Ctrl</kbd>, speak, let go</td><td>Your words are typed where your cursor is.</td></tr>
+      <tr><td>Hold <kbd>Right Alt</kbd> (Right Option on a Mac), speak, let go</td><td>It runs the command you said.</td></tr>
+      <tr><td>Say "open firefox", "close tab", "lock screen", "volume up"</td><td>Opens the app or presses the shortcut for you.</td></tr>
+      <tr><td>Say "search" and then your words</td><td>Opens a web search.</td></tr>
+      <tr><td>Say "remind me at 5 to call Rahul"</td><td>Adds a reminder. The buddy runs to the middle of the screen and barks when it is due.</td></tr>
+      <tr><td>Tap the buddy while it barks</td><td>Marks the reminder done. Double-tap to snooze 10 minutes.</td></tr>
+    </tbody></table></div>
+    <p>If a keyboard does not have a Right Ctrl key, change DICTATE_KEY and COMMAND_KEY in the program file.</p>
+
+    <h2 id="ai-models">Shika AI and models</h2>
+    <p>Two settings control the AI. They are plain lines in the program file, <code>shika.py</code>. Search the file for the name to find the line.</p>
+    <div class="scroll"><table><thead><tr><th>Setting</th><th>What it controls</th><th>Default</th></tr></thead><tbody>
+      <tr><td><code>WHISPER_MODEL</code></td><td>Speech to text (faster-whisper)</td><td><code>small.en</code></td></tr>
+      <tr><td><code>WHISPER_LANG</code></td><td>Speech language. <code>None</code> means auto detect.</td><td><code>en</code></td></tr>
+      <tr><td><code>OLLAMA_MODEL</code></td><td>Text cleanup and voice edits (Ollama)</td><td><code>qwen2.5:1.5b</code></td></tr>
+      <tr><td><code>OLLAMA_URL</code></td><td>Where Ollama is running</td><td><code>http://127.0.0.1:11434</code></td></tr>
+    </tbody></table></div>
+
+    <h3>Turn Shika AI on</h3>
+    <p>The installer asks if you want the language model, and the default answer is yes. If you skipped it, run the installer again with the AI option. Or install <a href="https://ollama.com" target="_blank" rel="noopener">Ollama</a> yourself and run <code>ollama pull qwen2.5:1.5b</code>.</p>
+    <div class="os-panel" id="m-linux"><div class="codebox"><button class="copy">Copy</button><pre>bash install.sh --with-ollama</pre></div></div>
+    <div class="os-panel" id="m-mac" hidden><div class="codebox"><button class="copy">Copy</button><pre>bash install-mac.sh --with-ollama</pre></div></div>
+    <div class="os-panel" id="m-windows" hidden><div class="codebox"><button class="copy">Copy</button><pre>.\install-windows.bat -WithOllama</pre></div></div>
+    <p>To check it, open the dashboard health check. The row "Shika AI (local model)" shows the model name when it is answering.</p>
+
+    <h3>Change the language model</h3>
+    <ol>
+      <li>Pick a model from the <a href="https://ollama.com/library" target="_blank" rel="noopener">Ollama library</a>, or from the table below.</li>
+      <li>Download it: <code>ollama pull qwen2.5:3b</code> (use your model name).</li>
+      <li>Open the installed program file, find <code>OLLAMA_MODEL</code> and put your model name inside the quotes.</li>
+      <li>Restart Shika with the command in the Restart section.</li>
+    </ol>
+    <div class="os-panel" id="n-linux"><div class="codebox"><button class="copy">Copy</button><pre>nano ~/.local/share/shika/shika.py
+# in nano, press Ctrl+W and search for OLLAMA_MODEL</pre></div></div>
+    <div class="os-panel" id="n-mac" hidden><div class="codebox"><button class="copy">Copy</button><pre>open -e "$HOME/Library/Application Support/ShikaApp/shika.py"</pre></div></div>
+    <div class="os-panel" id="n-windows" hidden><div class="codebox"><button class="copy">Copy</button><pre>notepad "$env:LOCALAPPDATA\ShikaApp\shika.py"</pre></div></div>
+    <div class="scroll"><table><thead><tr><th>Model</th><th>Size</th><th>What to expect</th></tr></thead><tbody>
+      <tr><td><code>qwen2.5:1.5b</code></td><td>about 1 GB</td><td>The default. Fast on a CPU. Good for cleanup.</td></tr>
+      <tr><td><code>llama3.2:1b</code></td><td>about 1.3 GB</td><td>Small and quick. Slightly simpler wording.</td></tr>
+      <tr><td><code>qwen2.5:3b</code></td><td>about 1.9 GB</td><td>Better wording and edits. Slower.</td></tr>
+      <tr><td><code>llama3.2:3b</code></td><td>about 2 GB</td><td>Another 3B option. Slower.</td></tr>
+      <tr><td><code>qwen2.5:7b</code></td><td>about 4.7 GB</td><td>Best quality of these. Needs 8 GB or more of memory and is slow on a CPU.</td></tr>
+    </tbody></table></div>
+    <p>Sizes are approximate. Ollama shows the exact size when you pull a model. A bigger model is smarter but slower. If the model takes too long, Shika gives up after a few seconds and uses its basic cleanup, so choose the biggest model that still answers quickly on your computer.</p>
+
+    <h3>Use Ollama on another computer</h3>
+    <p>Set <code>OLLAMA_URL</code> to the address of another machine that runs Ollama, for example <code>http://192.168.1.20:11434</code>. Your text then goes to that machine on your own network. Shika talks to the Ollama API only. Other services, such as hosted chat APIs, need code changes.</p>
+
+    <h3>Change the speech model</h3>
+    <p>Find <code>WHISPER_MODEL</code> and change the name. The new model downloads the next time Shika starts.</p>
+    <div class="scroll"><table><thead><tr><th>Model</th><th>Size</th><th>What to expect</th></tr></thead><tbody>
+      <tr><td><code>base.en</code></td><td>about 140 MB</td><td>Fastest. Misses more words and accents.</td></tr>
+      <tr><td><code>small.en</code></td><td>about 500 MB</td><td>The default. A good balance for English.</td></tr>
+      <tr><td><code>medium.en</code></td><td>about 1.5 GB</td><td>More accurate. Noticeably slower on a CPU.</td></tr>
+      <tr><td><code>small</code> or <code>medium</code></td><td>about 500 MB or 1.5 GB</td><td>Multilingual. Use these for languages other than English.</td></tr>
+      <tr><td><code>large-v3</code></td><td>about 3 GB</td><td>Most accurate and multilingual. Slow without a graphics card.</td></tr>
+    </tbody></table></div>
+    <p>For another language, pick a multilingual model and set <code>WHISPER_LANG = None</code> to auto detect, or a language code such as <code>"hi"</code> for Hindi. Models without ".en" in the name are multilingual. Non-English use has had much less testing.</p>
+
+    <h3>Keep your change when you update</h3>
+    <p>The installer copies <code>shika.py</code> over the installed one, so an update replaces your edit. To keep it, make the same change in the cloned folder (<code>shika/shika.py</code>) before you run the installer. To go back, set the values to the defaults above and restart.</p>
+
+    <h2 id="widgets">Widgets</h2>
+    <p>Four small windows float on your desktop on every system. They remember where you put them.</p>
+    <ul>
+      <li>Tasks and reminders. Tick a task to finish it.</li>
+      <li>Sticky notes. Make as many as you like. Press the bin twice to erase one.</li>
+      <li>Focus timer. Choose 15, 25, 45 or 60 minutes.</li>
+      <li>Clock. Switch between 12 and 24 hours.</li>
+    </ul>
+    <p>Open them from the reminder panel buttons, or say "show tasks widget", "focus timer", "clock widget", "new sticky note" or "hide all widgets". From a terminal you can run the program with <code>--widgets</code>.</p>
+
+    <h2 id="restart">Restart and update</h2>
+    <div class="os-panel" id="r-linux"><p>Stop it and start it again:</p><div class="codebox"><button class="copy">Copy</button><pre>pkill -f "shika/shika.py"; nohup env QT_QPA_PLATFORM=xcb ~/.local/share/shika/venv/bin/python3 ~/.local/share/shika/shika.py --autostart &gt;/dev/null 2&gt;&amp;1 &amp;</pre></div><p>To update, run <code>git pull</code> in the folder and run <code>bash install.sh</code> again.</p></div>
+    <div class="os-panel" id="r-mac" hidden><p>Stop it and start it again:</p><div class="codebox"><button class="copy">Copy</button><pre>pkill -f ShikaApp/shika.py; open ~/Applications/Shika.app</pre></div><p>To update, run <code>git pull</code> in the folder and run <code>bash install-mac.sh</code> again.</p></div>
+    <div class="os-panel" id="r-windows" hidden><p>In PowerShell:</p><div class="codebox"><button class="copy">Copy</button><pre>Stop-Process -Name pythonw -Force
+Start-Process "$env:LOCALAPPDATA\ShikaApp\venv\Scripts\pythonw.exe" "$env:LOCALAPPDATA\ShikaApp\shika.py"</pre></div><p>To update, run <code>git pull</code> in the folder and run <code>install-windows.bat</code> again.</p></div>
+
+    <h2 id="fix">Fixes</h2>
+    <details><summary>The key does nothing when I hold it</summary>
+      <div class="os-panel" id="x-linux"><p>You probably have not logged out and in since the install. Run <code>groups</code> in a terminal. If "input" is missing, log out and in again.</p></div>
+      <div class="os-panel" id="x-mac" hidden><p>Check Input Monitoring and Accessibility for the app, then quit and open it again.</p></div>
+      <div class="os-panel" id="x-windows" hidden><p>Some games and admin windows block key listeners. Try a normal window first. Then check that no other tool is using the same key.</p></div>
+    </details>
+    <details><summary>It hears nothing</summary><p>Check the microphone in your system sound settings and say a few words to see the level move. On a Mac and on Windows, also check the microphone privacy setting for the app.</p></details>
+    <details><summary>The words are wrong</summary><p>The default model is small.en. A larger model is more accurate and slower. A smaller one is faster and misses more. Speak at a normal pace and keep the mic near you.</p></details>
+    <details><summary>The first start is slow</summary><p>It is downloading the model, about 500 MB. After that it starts in a few seconds.</p></details>
+    <details><summary>I cannot see the buddy</summary><p>It may be behind a full screen app, or on another screen. Say "come here" or restart it with the command above.</p></details>
+    <details><summary>The fix text command does nothing</summary><p>That part needs the language model. Install <a href="https://ollama.com" target="_blank" rel="noopener">Ollama</a> and a model, or run the installer again with the AI option. See <a href="#ai-models">Shika AI and models</a>. The rest works without it.</p></details>
+
+    <h2 id="data">Your data</h2>
+    <p>Everything stays on your computer in plain files. Reminders, notes, timer state and settings are JSON files you can open and back up.</p>
+    <div class="scroll"><table><thead><tr><th>System</th><th>Where</th></tr></thead><tbody>
+      <tr><td>Linux</td><td><code>~/.config/shika</code> and <code>~/.local/share/summit</code></td></tr>
+      <tr><td>macOS</td><td><code>~/Library/Application Support/Shika</code> and <code>/Summit</code></td></tr>
+      <tr><td>Windows</td><td><code>%APPDATA%\Shika</code> and <code>%LOCALAPPDATA%\Summit</code></td></tr>
+    </tbody></table></div>
+
+    <h2 id="remove">Uninstall</h2>
+    <div class="os-panel" id="u-linux"><div class="codebox"><button class="copy">Copy</button><pre>bash uninstall.sh</pre></div></div>
+    <div class="os-panel" id="u-mac" hidden><div class="codebox"><button class="copy">Copy</button><pre>bash uninstall-mac.sh</pre></div></div>
+    <div class="os-panel" id="u-windows" hidden><div class="codebox"><button class="copy">Copy</button><pre>.\uninstall-windows.bat</pre></div></div>
+    <p>Your reminders and notes are left in place unless you delete the data folders above.</p>
+  </article>
+</div>
+<footer><div class="wrap">Built by Kailas Nath R (KNR). MIT license. <a href="index.html">Home</a> · <a href="https://github.com/iam-knr/desktop-buddy" target="_blank" rel="noopener">Source on GitHub</a></div></footer>
+<script>
+(function () {
+  var oses = ["linux", "mac", "windows"], pre = ["b", "i", "r", "x", "u", "m", "n"];
+  function pick(os) {
+    oses.forEach(function (o) {
+      document.getElementById("g-" + o).setAttribute("aria-selected", o === os);
+      pre.forEach(function (p) { var e = document.getElementById(p + "-" + o); if (e) e.hidden = o !== os; });
+    });
+    try { history.replaceState(null, "", "#" + os); } catch (e) {}
+  }
+  oses.forEach(function (o) { document.getElementById("g-" + o).addEventListener("click", function () { pick(o); }); });
+  var ua = navigator.userAgent, h = location.hash.replace("#", "");
+  pick(oses.indexOf(h) > -1 ? h : /Win/.test(ua) ? "windows" : /Mac/.test(ua) ? "mac" : "linux");
+  window.addEventListener("hashchange", function () { var x = location.hash.replace("#", ""); if (oses.indexOf(x) > -1) pick(x); });
+  document.querySelectorAll(".copy").forEach(function (b) { b.addEventListener("click", function () {
+    var p = b.parentElement.querySelector("pre"), t = p.textContent;
+    function ok() { b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+    function sel() { var r = document.createRange(); r.selectNodeContents(p); var s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "Press Ctrl+C"; }
+    try { navigator.clipboard.writeText(t).then(ok, sel); } catch (e) { sel(); }
+  }); });
+})();
+
+(function () {
+  var root = document.documentElement, nav = document.querySelector("nav.top"), reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var els = document.querySelectorAll(".doc h2, .doc h3, .doc p, .doc ol, .doc ul, .doc table, .doc .codebox, .doc .callout, .doc details");
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold: .08, rootMargin: "0px 0px -5% 0px" });
+  els.forEach(function (el, i) { if (el.closest(".doc > div:first-child")) return; el.setAttribute("data-r", ""); el.style.setProperty("--d", "0ms"); if (reduce) el.classList.add("in"); else io.observe(el); });
+  var secs = [].slice.call(document.querySelectorAll(".doc h2[id]")), toc = [].slice.call(document.querySelectorAll(".toc a"));
+  function onScroll() {
+    var h = root.scrollHeight - innerHeight; root.style.setProperty("--p", h > 0 ? (scrollY / h).toFixed(4) : 0);
+    nav.classList.toggle("scrolled", scrollY > 8);
+    var cur = ""; secs.forEach(function (s) { if (s.getBoundingClientRect().top < innerHeight * .35) cur = s.id; });
+    toc.forEach(function (a) { a.classList.toggle("on", a.getAttribute("href") === "#" + cur); });
+  }
+  addEventListener("scroll", function () { requestAnimationFrame(onScroll); }, { passive: true }); onScroll();
+})();
+</script>
+</body></html>
