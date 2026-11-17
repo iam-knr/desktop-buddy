@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>html{color-scheme:dark}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style><script>document.documentElement.className+=" js"</script>
+<script>document.documentElement.className+=" js"</script>
 <title>Shika AI Desktop Buddy</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Shika AI is a free desktop companion and offline voice assistant for Linux, macOS and Windows. Hold a key, talk, and your words are typed into any app. Speech and AI run on your own computer.">
@@ -242,7 +242,7 @@ tbody tr { transition: background .2s; } tbody tr:hover { background: rgba(255,2
 @media (max-width: 920px) { .steps::before, .steps::after { display: none; } }
 </style>
 
-<div id="prog"></div></head><body><div class="sky"></div><div class="moon" aria-hidden="true"></div>
+<div id="prog"></div><div class="sky"></div><div class="moon" aria-hidden="true"></div>
 <svg class="hills" viewBox="0 0 1440 190" preserveAspectRatio="none" aria-hidden="true">
   <path d="M0 110 C 180 40 320 60 520 100 S 900 150 1100 90 S 1360 40 1440 80 V190 H0Z" fill="#1d2150"/>
   <path d="M0 140 C 220 90 380 110 620 140 S 1000 175 1220 130 S 1400 110 1440 124 V190 H0Z" fill="#262c63"/>
@@ -431,6 +431,47 @@ cd desktop-buddy
 </section>
 </main>
 
+<style>
+.me { padding-block: 70px 10px; }
+.me-card { display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: clamp(22px, 4vw, 48px); align-items: center;
+  border: 1px solid var(--line-2); border-radius: 26px; padding: clamp(22px, 4vw, 40px); background: var(--panel);
+  position: relative; overflow: hidden; }
+.me-card::before { content: ""; position: absolute; width: 380px; height: 380px; right: -120px; top: -160px; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(214,32,47,.22), transparent); pointer-events: none; }
+.me-pic { width: 100%; max-width: 220px; aspect-ratio: 1; object-fit: contain; justify-self: center; }
+.me-tag { font-family: var(--mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--faint); }
+.me-card h2 { font-family: var(--display); font-size: clamp(30px, 4.4vw, 46px); line-height: 1.05; margin: 10px 0 8px; letter-spacing: -.02em; }
+.me-role { color: var(--soft); font-size: 17px; margin: 0 0 14px; }
+.me-card p.me-bio { color: var(--muted); max-width: 58ch; margin: 0 0 22px; }
+.me-links { display: flex; flex-wrap: wrap; gap: 10px; }
+.me-links a { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; text-decoration: none;
+  border: 1px solid var(--line-2); color: var(--fg); font-size: 15px; font-weight: 600;
+  transition: transform .2s var(--ease), border-color .2s, background .2s; }
+.me-links a:hover { transform: translateY(-2px); border-color: var(--belt-hi); background: rgba(214,32,47,.12); }
+.me-links a:focus-visible { outline: 2px solid var(--letters); outline-offset: 3px; }
+.me-links svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 640px) { .me-card { grid-template-columns: 1fr; text-align: left; } .me-pic { max-width: 170px; justify-self: start; } }
+</style>
+<section class="me" id="author" aria-labelledby="me-h">
+  <div class="wrap">
+    <div class="me-card">
+      <img class="me-pic" src="assets/knr.png" width="220" height="220" alt="Kailas Nath R at his laptop" loading="lazy">
+      <div>
+        <span class="me-tag">Made by</span>
+        <h2 id="me-h">Kailas Nath R</h2>
+        <p class="me-role">Agentic AI Consultant, Digital Marketing Trainer and Developer. India.</p>
+        <p class="me-bio">I run ads for brands, build AI agents that handle the boring parts of marketing, and teach both. I built Shika because I wanted a desktop buddy that could also type for me.</p>
+        <div class="me-links">
+          <a href="https://linkedin.com/in/iamknr" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg>LinkedIn</a>
+          <a href="https://aiinmarketing.in/author/kailasnathr" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l5 5L9 20l-5 1 1-5zM13 6l5 5"/></svg>Articles</a>
+          <a href="https://amazon.in/dp/B0HPKN3W3D" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6c-2.5-1.5-5.500-1.500-8.500-.8v13c3-.7 6-.7 8.500.8 2.500-1.500 5.500-1.500 8.500-.8v-13c-3-.7-6-.7-8.500.8zM12 6v13"/></svg>The book</a>
+          <a href="https://adsmentor.in" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l7 4V6l-7 4zM17 9a4 4 0 0 1 0 6"/></svg>adsmentor.in</a>
+          <a href="https://github.com/iam-knr" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg>GitHub</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 <footer><div class="wrap">Built by Kailas Nath R (KNR). MIT license. <a href="https://github.com/iam-knr/desktop-buddy" target="_blank" rel="noopener">Source on GitHub</a> · <a href="guide.html">Setup guide</a></div></footer>
 
 <div id="pup" aria-live="off"><div id="bubble"></div><svg id="pupSvg" viewBox="-56 -88 112 96" role="img" aria-label="Your desktop buddy"></svg><div id="pupHit" title="Click to pet"></div></div>
@@ -680,4 +721,3 @@ const F = {"shika":{"name":"Shika","species":"orange pup","group":"pup","f":{"w0
   buildCast();
 })();
 </script>
-</body></html>
