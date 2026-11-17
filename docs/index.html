@@ -1,6 +1,6 @@
-<script>document.documentElement.className+=" js"</script>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>html{color-scheme:dark}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style><script>document.documentElement.className+=" js"</script>
 <title>Shika AI Desktop Buddy</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="claude:viewport-fit-sides" content="cover"><meta name="theme-color" content="#0e0f14">
 <meta name="description" content="Shika AI is a free desktop companion and offline voice assistant for Linux, macOS and Windows. Hold a key, talk, and your words are typed into any app. Speech and AI run on your own computer.">
 <meta name="keywords" content="Shika AI, Desktop Buddy, desktop companion, desktop pet, offline voice assistant, voice typing, push to talk dictation, faster-whisper, Ollama, local AI, Linux, macOS, Windows">
 <link rel="canonical" href="https://iam-knr.github.io/desktop-buddy/">
@@ -13,7 +13,7 @@
 /* A calm dark desk. Neutral ink background, one red and one yellow taken from the pet's own belt, thin lines, no glow. */
 :root {
   --night: #0e0f14; --night-2: #13141b; --panel: rgba(255,255,255,.035); --panel-solid: #15161d;
-  --line: rgba(255,255,255,.09); --line-2: rgba(255,255,255,.16); --fg: #ecebf1; --muted: #a2a1b3; --faint: #72717f;
+  --line: rgba(255,255,255,.09); --line-2: rgba(255,255,255,.16); --fg: #ecebf1; --muted: #b2b1c2; --faint: #8f8ea1;
   --belt: #d6202f; --belt-hi: #e8323f; --letters: #ffd83d; --fur: #e88a3c; --outline: #3c2112;
   --ok: #67d6a0; --soft: #c9c8d6;
   --display: "Bricolage Grotesque", "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
@@ -242,14 +242,26 @@ tbody tr { transition: background .2s; } tbody tr:hover { background: rgba(255,2
 @media (max-width: 920px) { .steps::before, .steps::after { display: none; } }
 </style>
 
-<div id="prog"></div><div class="sky"></div><div class="moon" aria-hidden="true"></div>
+<div id="prog"></div></head><body><div class="sky"></div><div class="moon" aria-hidden="true"></div>
 <svg class="hills" viewBox="0 0 1440 190" preserveAspectRatio="none" aria-hidden="true">
   <path d="M0 110 C 180 40 320 60 520 100 S 900 150 1100 90 S 1360 40 1440 80 V190 H0Z" fill="#1d2150"/>
   <path d="M0 140 C 220 90 380 110 620 140 S 1000 175 1220 130 S 1400 110 1440 124 V190 H0Z" fill="#262c63"/>
   <path d="M0 168 C 300 148 560 172 820 160 S 1240 150 1440 166 V190 H0Z" fill="#2f3877"/>
 </svg>
 
-<link rel="icon" type="image/svg+xml" href="assets/shika-icon.svg"><style>.logo .ico{width:34px;height:34px;display:block;transition:transform .4s var(--ease)}.logo:hover .ico{transform:rotate(-8deg) scale(1.06)}</style><nav class="top"><div class="inner">
+<link rel="icon" type="image/svg+xml" href="assets/shika-icon.svg"><style>.logo .ico{width:34px;height:34px;display:block;transition:transform .4s var(--ease)}.logo:hover .ico{transform:rotate(-8deg) scale(1.06)}</style><style>
+summary { min-height: 44px; display: flex; align-items: center; padding-block: 10px; cursor: pointer; }
+.codebox .copy { padding: 9px 13px; min-height: 34px; }
+button[role="checkbox"] { position: relative; min-width: 24px; min-height: 24px; }
+button[role="checkbox"]::after { content: ""; position: absolute; inset: -12px; }
+.panel h2.h3 { font-family: var(--display); font-size: 21px; font-weight: 700; line-height: 1.2; letter-spacing: -.02em; margin: 0; }
+.me-card { isolation: isolate; }
+.me-card::before { z-index: -1; }
+.chip[aria-pressed=true], .chip[aria-selected=true] { background: #b5172a; color: #fff; }
+footer a { display: inline-block; padding-block: 11px; }
+.endstrip .can a { padding-inline: 8px; }
+</style>
+<nav class="top"><div class="inner">
   <a class="logo" href="#top"><img class="ico" src="assets/shika-icon.svg" width="34" height="34" alt="">Shika AI</a>
   <div class="links"><a href="#features">Features</a><a href="#ai">Shika AI</a><a href="#characters">Characters</a><a href="#widgets">Widgets</a><a href="#install">Install</a><a class="guide" href="guide.html">Setup guide</a><a class="gh" href="https://github.com/iam-knr/desktop-buddy" target="_blank" rel="noopener">GitHub</a></div>
 </div></nav>
@@ -264,7 +276,7 @@ tbody tr { transition: background .2s; } tbody tr:hover { background: rgba(255,2
     <p class="note">Speech is turned into text on your own computer. Nothing is sent to a server. Also known as Desktop Buddy.</p>
   </div>
   <aside class="panel play" aria-label="Play with the buddy">
-    <h3>Say hi to <span id="nm">Shika</span></h3>
+    <h2 class="h3">Say hi to <span id="nm">Shika</span></h2>
     <div><label for="nameIn">Give it a name</label><input id="nameIn" type="text" maxlength="12" value="Shika" autocomplete="off" spellcheck="false"></div>
     <div class="row">
       <button class="chip" id="bFollow" aria-pressed="true">Follow my mouse</button>
@@ -472,7 +484,7 @@ cd desktop-buddy
     </div>
   </div>
 </section>
-<style>footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}footer .endstrip{max-width:1120px;margin:34px auto 0;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:center}footer .can{display:inline-flex;align-items:center;gap:10px;font-size:15px}footer .can img{display:block;width:auto;height:32px;flex:none;position:relative;z-index:2;transition:transform .35s var(--ease);transform-origin:50% 100%}footer .can a{display:inline-flex;color:inherit;text-decoration:none}footer .can a{cursor:zoom-in}footer .can a:hover img,footer .can a:focus-visible img{transform:scale(2.6)}footer .can .gh{width:24px;height:24px;flex:none}</style><footer><div class="wrap"><span>&copy; 2026 Kailas (KNR) Nath R. Released under the MIT license. <a href="https://github.com/iam-knr/desktop-buddy" target="_blank" rel="noopener">Source on GitHub</a> &middot; <a href="guide.html">Setup guide</a></span></div><div class="endstrip"><span class="can">Built with <a class="canlink" href="https://www.monsterenergy.com" target="_blank" rel="nofollow noopener" title="Monster Energy" aria-label="Monster Energy" onclick="return false"><img src="assets/can.png" alt="Monster Energy Zero Ultra can" width="13" height="32" loading="lazy"></a> &amp; <svg class="gh" viewBox="0 0 24 24" role="img" aria-label="grey heart"><path d="M12 21s-8-5.200-8-11.200C4 6.800 6.200 5 8.600 5c1.500 0 2.800.8 3.400 2 .6-1.200 1.900-2 3.400-2C17.800 5 20 6.800 20 9.800 20 15.800 12 21 12 21z" fill="#9aa0ab" stroke="#6c717c" stroke-width="1.400" stroke-linejoin="round"/></svg></span></div></footer>
+<style>footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}footer{padding-bottom:38px}.endstrip{position:relative;z-index:3;margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));display:flex;justify-content:center;padding:22px max(16px,env(safe-area-inset-right,0px)) calc(22px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:#0b0c10;border-top:1px solid var(--line-2);color:var(--muted);font-size:14px}.endstrip .can{display:inline-flex;align-items:center;gap:10px;font-size:15px}.endstrip .can img{display:block;width:auto;height:32px;flex:none;position:relative;z-index:2;transition:transform .35s var(--ease);transform-origin:50% 100%}.endstrip .can a{display:inline-flex;color:inherit;text-decoration:none}.endstrip .can a{cursor:zoom-in}.endstrip .can a:hover img,.endstrip .can a:focus-visible img{transform:scale(2.6)}.endstrip .can .gh{width:24px;height:24px;flex:none}</style><footer><div class="wrap"><span>&copy; 2026 Kailas (KNR) Nath R. Released under the MIT license. <a href="https://github.com/iam-knr/desktop-buddy" target="_blank" rel="noopener">Source on GitHub</a> &middot; <a href="guide.html">Setup guide</a></span></div></footer><div class="endstrip"><span class="can">Built with <a class="canlink" href="https://www.monsterenergy.com" target="_blank" rel="nofollow noopener" title="Monster Energy" aria-label="Monster Energy" onclick="return false"><img src="assets/can.png" alt="Monster Energy Zero Ultra can" width="13" height="32" loading="lazy"></a> &amp; <svg class="gh" viewBox="0 0 24 24" role="img" aria-label="grey heart"><path d="M12 21s-8-5.200-8-11.200C4 6.800 6.200 5 8.600 5c1.500 0 2.800.8 3.400 2 .6-1.200 1.900-2 3.400-2C17.800 5 20 6.800 20 9.800 20 15.800 12 21 12 21z" fill="#9aa0ab" stroke="#6c717c" stroke-width="1.400" stroke-linejoin="round"/></svg></span></div>
 
 <div id="pup" aria-live="off"><div id="bubble"></div><svg id="pupSvg" viewBox="-56 -88 112 96" role="img" aria-label="Your desktop buddy"></svg><div id="pupHit" title="Click to pet"></div></div>
 
@@ -712,7 +724,7 @@ const F = {"shika":{"name":"Shika","species":"orange pup","group":"pup","f":{"w0
   }), { threshold: .35 });
   document.querySelectorAll("main section[id]").forEach(el => sio.observe(el));
   const track = $("#track");
-  if (track) { const ids = Object.keys(F); let h = ""; for (let k = 0; k < 2; k++) ids.forEach(id => { h += '<svg viewBox="-56 -88 112 96">' + frame(id, "idle", 1) + "</svg>"; }); track.innerHTML = h; }
+  if (track) { const ids = Object.keys(F); let h = ""; for (let k = 0; k < 2; k++) ids.forEach(id => { h += '<svg viewBox="-56 -88 112 96">' + frame(id, "idle", 1) + "</svg>"; }); var _n = 0; h = h.replace(/<svg[\s\S]*?<\/svg>/g, function (sv) { _n++; return sv.replace(/id="(c\d+)"/g, 'id="$1t' + _n + '"').replace(/url\(#(c\d+)\)/g, 'url(#$1t' + _n + ')'); }); track.innerHTML = h; }
 
   // ---- start: the buddy runs in from the left
   x = -60; tx = Math.round(Math.min(innerWidth * .5, 560)); draw("w0"); place();
@@ -721,3 +733,4 @@ const F = {"shika":{"name":"Shika","species":"orange pup","group":"pup","f":{"w0
   buildCast();
 })();
 </script>
+</body></html>
