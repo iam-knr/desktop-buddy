@@ -3009,12 +3009,17 @@ class CharacterPage(QFrame):
             lay.addLayout(grid)
             return grid
 
+        self.grids = []
         for text, group, per_row in (("PUPS", "pup", 6), ("MORE BUDDIES", "buddy", 6)):
             grid = section(text)
+            made = []
             for i, c in enumerate([c for c in CHARACTERS if c["group"] == group]):
                 card = CharCard(c["id"], self)
                 self.cards[c["id"]] = card
+                made.append(card)
                 grid.addWidget(card, i // per_row, i % per_row)
+            self.grids.append((grid, made))
+        self._per = 6
 
         lay.addSpacing(8)
         self.name_title = QLabel("")
@@ -3058,6 +3063,22 @@ class CharacterPage(QFrame):
     def tick(self):
         for card in self.cards.values():
             card.tick()
+
+    def reflow(self):
+        """As many cards per row as fit, so the grid never runs off the right edge of the page."""
+        per = max(2, min(6, (self.width() - 64 + 10) // 132))
+        if per == self._per:
+            return
+        self._per = per
+        for grid, cards in self.grids:
+            for card in cards:
+                grid.removeWidget(card)
+            for i, card in enumerate(cards):
+                grid.addWidget(card, i // per, i % per)
+
+    def resizeEvent(self, e):
+        self.reflow()
+        super().resizeEvent(e)
 
     def showEvent(self, e):
         self.refresh()
@@ -3120,14 +3141,16 @@ class Dashboard(QWidget):
                            "QComboBox QAbstractItemView { background: #141416; color: #f2f2f3;"
                            " selection-background-color: #e11d2e; }"
                            "QTextBrowser { background: transparent; border: none; }"
+                           "QPushButton { min-height: 20px; } QComboBox { min-height: 20px; }"
+                           "QPushButton#nav { min-height: 22px; }"
                            "QScrollArea { background: transparent; border: none; }"
                            "QScrollArea > QWidget > QWidget { background: transparent; }"
                            "QPushButton#charcard { background: rgba(255,255,255,8); border: 1px solid rgba(255,255,255,22);"
                            " border-radius: 14px; }"
                            "QPushButton#charcard:hover { border-color: rgba(255,255,255,80); }"
                            "QPushButton#charcard:checked { border: 2px solid #e11d2e; background: rgba(225,29,46,30); }")
-        self.resize(1040, 660)
-        self.setMinimumSize(800, 480)
+        self.resize(1180, 800)
+        self.setMinimumSize(1000, 600)
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
         shell = QFrame()
@@ -3140,28 +3163,38 @@ class Dashboard(QWidget):
         # ---- sidebar ----
         side = QFrame()
         side.setObjectName("side")
-        side.setFixedWidth(210)
-        s = QVBoxLayout(side)
-        s.setContentsMargins(18, 22, 18, 18)
-        s.setSpacing(6)
+        side.setFixedWidth(236)
+        side_out = QVBoxLayout(side)
+        side_out.setContentsMargins(0, 0, 0, 0)
+        side_scroll = QScrollArea()
+        side_scroll.setWidgetResizable(True)
+        side_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        side_out.addWidget(side_scroll)
+        side_in = QWidget()
+        s = QVBoxLayout(side_in)
+        s.setContentsMargins(20, 24, 20, 20)
+        s.setSpacing(8)
+        side_scroll.setWidget(side_in)
         brand = QLabel("SHIKA")
         brand.setObjectName("brand")
         s.addWidget(brand)
-        sub = QLabel(f"—  YOUR VOICE NOTEBOOK  ·  v{VERSION}")
+        sub = QLabel(f"YOUR VOICE NOTEBOOK  ·  v{VERSION}")
         sub.setObjectName("muted")
+        sub.setWordWrap(True)
         s.addWidget(sub)
-        s.addSpacing(18)
+        s.addSpacing(14)
         self.nav = []
         for label, kind in self.FILTERS:
             b = QPushButton(label)
             b.setObjectName("nav")
             b.setCheckable(True)
+            b.setMinimumHeight(38)
             b.setCursor(Qt.CursorShape.PointingHandCursor)
             b.clicked.connect(lambda _=False, k=kind: self.set_filter(k))
             s.addWidget(b)
             self.nav.append((b, kind))
         self.nav[0][0].setChecked(True)
-        s.addSpacing(18)
+        s.addSpacing(16)
         self.stat_words = QLabel("0")
         self.stat_words.setObjectName("stat")
         s.addWidget(self.stat_words)
@@ -3172,33 +3205,38 @@ class Dashboard(QWidget):
         self.stat_more.setObjectName("muted")
         self.stat_more.setWordWrap(True)
         s.addWidget(self.stat_more)
+        s.addSpacing(14)
         s.addStretch(1)
         new = QPushButton("＋  New note")
         new.setObjectName("primary")
+        new.setMinimumHeight(38)
         new.clicked.connect(self.new_note)
         s.addWidget(new)
         pad = QPushButton("Quick scratchpad")
+        pad.setMinimumHeight(36)
         pad.clicked.connect(lambda: self.pup.scratch.toggle())
         s.addWidget(pad)
+        s.addSpacing(8)
         cl = QLabel("CLEANUP")
         cl.setObjectName("muted")
         s.addWidget(cl)
         self.cleanup = QComboBox()
-        for label, key in (("✨ Shika AI (smart)", "auto"), ("Light (rules)", "light"), ("Off (as spoken)", "off")):
+        for label, key in (("✨ Shika AI", "auto"), ("Light rules", "light"), ("Off", "off")):
             self.cleanup.addItem(label, key)
         self.cleanup.setCurrentIndex(max(0, self.cleanup.findData(self.pup.settings.get("cleanup", "auto"))))
         self.cleanup.currentIndexChanged.connect(lambda i: self.pup.set_cleanup(self.cleanup.itemData(i)))
         s.addWidget(self.cleanup)
+        s.addSpacing(4)
         fl = QLabel("FORMAT")
         fl.setObjectName("muted")
         s.addWidget(fl)
         self.fmt = QComboBox()
-        for label, key in (("✨ Formatted (lists, steps)", "formatted"), ("Aa Simple (clean sentences)", "simple"),
-                           ("¶ Minimal (as spoken)", "minimal")):
+        for label, key in (("✨ Formatted", "formatted"), ("Aa Simple", "simple"), ("¶ Minimal", "minimal")):
             self.fmt.addItem(label, key)
         self.fmt.setCurrentIndex(max(0, self.fmt.findData(self.pup.settings.get("format", "formatted"))))
         self.fmt.currentIndexChanged.connect(lambda i: self.pup.set_format(self.fmt.itemData(i)))
         s.addWidget(self.fmt)
+        s.addSpacing(4)
         sl = QLabel("SPEED")
         sl.setObjectName("muted")
         s.addWidget(sl)
@@ -3208,14 +3246,18 @@ class Dashboard(QWidget):
         self.speed.setCurrentIndex(max(0, self.speed.findData(self.pup.settings.get("speed", "balanced"))))
         self.speed.currentIndexChanged.connect(lambda i: self.pup.set_speed(self.speed.itemData(i)))
         s.addWidget(self.speed)
+        s.addSpacing(8)
         dic = QPushButton("Dictionary…")
+        dic.setMinimumHeight(36)
         dic.clicked.connect(lambda: (load_dictionary(), open_target(DICTIONARY_FILE)))
         s.addWidget(dic)
         chk = QPushButton("🩺  Check my setup")
+        chk.setMinimumHeight(36)
         chk.clicked.connect(lambda: self.pup.open_setup_check())
         s.addWidget(chk)
         s.addSpacing(8)
         self.wake_btn = QPushButton("🐶  Wake the pup")
+        self.wake_btn.setMinimumHeight(36)
         self.wake_btn.clicked.connect(lambda: (self.pup.wake_from_launcher(), self.refresh()))
         s.addWidget(self.wake_btn)
         row.addWidget(side)
@@ -3242,9 +3284,10 @@ class Dashboard(QWidget):
 
         mid = QFrame()
         mid.setObjectName("mid")
-        mid.setFixedWidth(330)
+        mid.setFixedWidth(320)
         m = QVBoxLayout(mid)
-        m.setContentsMargins(12, 18, 6, 12)
+        m.setContentsMargins(14, 20, 8, 14)
+        m.setSpacing(10)
         self.search = QLineEdit()
         self.search.setPlaceholderText("Search everything…")
         self.search.textChanged.connect(self.refresh)
@@ -3258,12 +3301,14 @@ class Dashboard(QWidget):
         e = QVBoxLayout(ed)
         e.setContentsMargins(28, 22, 28, 18)
         e.setSpacing(10)
-        top = QHBoxLayout()
+        top = QVBoxLayout()
+        top.setSpacing(8)
         self.meta = QLabel("")
         self.meta.setObjectName("muted")
-        top.addWidget(self.meta, 1)
+        self.meta.setWordWrap(True)
+        top.addWidget(self.meta)
         self.history = QComboBox()
-        self.history.setMinimumWidth(220)
+        self.history.setMinimumWidth(0)
         self.history.activated.connect(self.on_history)
         top.addWidget(self.history)
         e.addLayout(top)
@@ -3284,10 +3329,12 @@ class Dashboard(QWidget):
         self.empty.setObjectName("empty")
         self.empty.setAlignment(Qt.AlignmentFlag.AlignCenter)
         e.addWidget(self.empty, 1)
-        bar = QHBoxLayout()
         self.count = QLabel("")
         self.count.setObjectName("muted")
-        bar.addWidget(self.count, 1)
+        e.addWidget(self.count)
+        bar = QHBoxLayout()
+        bar.setSpacing(8)
+        bar.addStretch(1)
         self.restore_btn = QPushButton("Restore this version")
         self.restore_btn.setObjectName("primary")
         self.restore_btn.clicked.connect(self.restore_version)
@@ -3301,6 +3348,7 @@ class Dashboard(QWidget):
         self.del_btn.setObjectName("danger")
         self.del_btn.clicked.connect(self.delete_entry)
         for b in (self.restore_btn, self.back_btn, self.snap_btn, self.copy_btn, self.del_btn):
+            b.setMinimumHeight(34)
             bar.addWidget(b)
         e.addLayout(bar)
         brow.addWidget(ed, 1)
@@ -3361,15 +3409,20 @@ class Dashboard(QWidget):
             nv = len(e.get("versions", []))
             vtag = f" · v{nv + 1}" if nv else ""
             gone = " · erased from desktop" if e.get("removed") else ""
-            lbl = QLabel(f"<div style='font-weight:700'>{icon}&nbsp; {html.escape(Library.title_of(e))}</div>"
-                         f"<div style='color:rgba(255,255,255,0.5);font-size:11px'>{short_when(e['updated'])}"
-                         f"{vtag}{gone} · {html.escape(snippet)}</div>")
-            lbl.setWordWrap(True)
+            def clip(t, n):
+                t = " ".join(str(t).split())
+                return t if len(t) <= n else t[:n - 1].rstrip() + "…"
+            when = short_when(e["updated"])
+            title = html.escape(clip(Library.title_of(e), 26))
+            second = html.escape(clip(f"{when}{vtag}{gone} · {snippet}", 40))
+            lbl = QLabel(f"<div style='font-weight:700'>{icon}&nbsp; {title}</div>"
+                         f"<div style='color:rgba(255,255,255,0.5);font-size:11px'>{second}</div>")
+            lbl.setWordWrap(False)
             lbl.setContentsMargins(10, 8, 10, 8)
             lbl.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
             it = QListWidgetItem()
             it.setData(Qt.ItemDataRole.UserRole, e["id"])
-            it.setSizeHint(QSize(0, 60))
+            it.setSizeHint(QSize(0, 66))
             self.list.addItem(it)
             self.list.setItemWidget(it, lbl)
             if e["id"] == self.current:
