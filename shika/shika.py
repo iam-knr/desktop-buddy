@@ -563,7 +563,7 @@ class ReminderPanel(QWidget):
         lay.addLayout(fun)
         wrow = QHBoxLayout()
         wrow.setSpacing(6)
-        for label, fn in (("✅ Tasks", lambda: self.pup.widgets.toggle("tasks")), ("🗒 Note", self.pup.widgets.new_note),
+        for label, fn in (("✅ Tasks", lambda: self.pup.widgets.toggle("tasks")), ("🗒 Note", lambda: self.pup.widgets.new_note()),
                           ("⏱ Focus", lambda: self.pup.widgets.toggle("focus")), ("🕒 Clock", lambda: self.pup.widgets.toggle("clock"))):
             b = QPushButton(label)
             b.setCursor(Qt.CursorShape.PointingHandCursor)
