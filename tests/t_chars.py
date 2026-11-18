@@ -90,7 +90,7 @@ check("old commands still work", (say("open shika"), opened.count("app"))[1] == 
 # ---- taskbar awareness
 check("panel_insets: bottom taskbar", S.panel_insets([{"loc": "bottom", "h": 44, "hide": "none", "scr": 0}], 0) == (0, 0, 0, 44))
 check("panel_insets: auto-hide counts for nothing", S.panel_insets([{"loc": "bottom", "h": 44, "hide": "autohide", "scr": 0}], 0) == (0, 0, 0, 0))
-check("panel_insets: floating adds its gap", S.panel_insets([{"loc": "bottom", "h": 44, "fl": 1, "scr": 0}], 0)[3] == 52)
+check("panel_insets: floating panel adds no fixed gap (Plasma docks it flush under a maximized window)", S.panel_insets([{"loc": "bottom", "h": 44, "fl": 1, "scr": 0}], 0)[3] == 44)
 check("panel_insets: other screen ignored", S.panel_insets([{"loc": "bottom", "h": 44, "scr": 1}], 0) == (0, 0, 0, 0))
 check("panel_insets: all four sides", S.panel_insets([{"loc": "left", "h": 40}, {"loc": "top", "h": 30}, {"loc": "right", "h": 58}, {"loc": "bottom", "h": 44}]) == (40, 30, 58, 44))
 check("describe: bottom", "bottom, 44 px" in S.describe_panels([{"loc": "bottom", "h": 44, "scr": 0}], 0))

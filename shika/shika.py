@@ -4474,7 +4474,8 @@ def read_panels():
 
 def panel_insets(panels, idx=None):
     """(left, top, right, bottom) pixels the visible panels take from one screen.
-    A panel that hides itself takes nothing; a floating one also keeps its 8 px gap clear."""
+    A panel that hides itself takes nothing. A floating panel adds no fixed gap here: Plasma docks it flush
+    to the screen edge whenever a window is maximized, so the live free area Qt reports decides the rest."""
     L = T = R = B = 0
     for p in panels or []:
         if idx is not None and p.get("scr", idx) not in (idx, -1):
@@ -4485,8 +4486,6 @@ def panel_insets(panels, idx=None):
             h = max(0, int(p.get("h") or 0))
         except (TypeError, ValueError):
             continue
-        if p.get("fl"):
-            h += 8
         loc = p.get("loc")
         if loc == "bottom":
             B = max(B, h)
@@ -7134,6 +7133,12 @@ class Pup(PupArt, QWidget):
             self.panel_sig, self.panels, self.panels_ok = sig, res, True
             dlog(f"panels: {sig}")
             self.refresh_characters()
+        try:
+            scr = QGuiApplication.primaryScreen()
+            dlog(f"floor: qt_bottom_inset={scr.geometry().bottom() - scr.availableGeometry().bottom()} "
+                 f"area_bottom={self.area().bottom()} screen_bottom={scr.geometry().bottom()}")
+        except Exception:
+            pass
         self.reseat()
 
     def set_taskbar_aware(self, on):
